@@ -1,1 +1,7 @@
-# code and data for jags model to estimate occupancy of carnivores in Yosemite via search-encounter scat detection data and detection-non-detection data collected via remote cameras 
+# code and data for jags model to estimate occupancy of carnivores in Yosemite 
+# via search-encounter scat detection data and detection-non-detection data 
+# collected via remote cameras 
+
+# Files:
+# YosemiteOcc_All_2kmgridsnow -- .txt file specifying JAGS model code and priors
+# YosemiteOcc_jagsdata_240814 -- .txt file with formatted data to run JAGS model (formatted via data.dump)
