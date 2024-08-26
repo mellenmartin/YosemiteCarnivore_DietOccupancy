@@ -4,9 +4,9 @@
 #=============================
 
 #### Scats collected by Rogue Detection Teams (2019-2020)
-#### Funded by  OSU, YOSE NP, Yosemite Conservancy - Matthews, Stock, Green, Levi 
-#### Last modified 230118, Marie Martin
-#### Modified from Brent Barry PEPE Diet Prelim  # BRB 29042022    
+#### Funded by OSU, YOSE NP, Yosemite Conservancy - Sean Matthews, Sarah Stock, David Green, Ben Sacks, Taal Levi 
+#### Modified by Marie Martin
+#### Modified from code written by Brent Barry     
 ###################
 
 library(dplyr)
@@ -16,8 +16,7 @@ remove(list=ls())
 gc()
 ### Step 1, Load from csv
 
-#diet = read.csv("data/processed_data/DietGeoData_220607_group1.csv")
-setwd("~/YosemiteDiet/")
+setwd("~/YosemiteDiet/") # your working directory
 diet <- read.csv("YOSE_ResultsAll_12sDietMetabarcoding_Levi_mem230703.csv")
 sizecats <- read.csv("YOSE_SpeciesSummary_SizeTaxonomy_230703.csv")
 scatlocs <- read.csv("ScatsProjected_NAD83Z11.csv")
