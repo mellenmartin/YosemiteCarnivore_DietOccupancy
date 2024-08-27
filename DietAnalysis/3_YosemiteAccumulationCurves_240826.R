@@ -17,7 +17,7 @@ require(ggplot2)
 require(tidyr) #for spread and gather
 
 # set working drive
-setwd("C:/Users/sean.matthews/Documents/MEM/OSU/Projects/YosemiteDiet/")
+setwd("~/YosemiteDiet/")
 diet <- read.csv("ProcessedYosemite_DietGeoDataSimplified_240414.csv") 
 names(diet) = tolower(names(diet))
 data.all <- diet %>% 
