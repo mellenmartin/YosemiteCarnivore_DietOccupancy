@@ -1,11 +1,14 @@
-#
-# produce rarefraction curves for carnivore scat species diversity
+## produce rarefraction curves for carnivore scat species diversity
+
+#### Scats collected by Rogue Detection Teams (2019-2020)
+#### Funded by OSU, YOSE NP, Yosemite Conservancy - Sean Matthews, Sarah Stock, David Green, Ben Sacks, Taal Levi 
+#### Modified by Marie Martin
+#### Modified from code written by Marie Tosa
 
 # help with package from:
 # https://cran.r-project.org/web/packages/iNEXT/vignettes/Introduction.html
 
-rm(list=ls());gc() #I like to start with these commands to clear the memory
-
+rm(list=ls());gc() 
 #####
 #load packages
 require(iNEXT)
