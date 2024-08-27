@@ -3,11 +3,10 @@
 # Diet data - species level plots
 #=============================
 
-
 #### Scats collected by Rogue Detection Teams (2019-2020)
-#### Funded by  OSU, YOSE NP, Yosemite Conservancy - Matthews, Stock, Green, Levi 
-#### Last modified 230118, Marie Martin
-#### Modified from Brent Barry PEPE Diet Prelim  # BRB 29042022   
+#### Funded by OSU, YOSE NP, Yosemite Conservancy - Sean Matthews, Sarah Stock, David Green, Ben Sacks, Taal Levi 
+#### Modified by Marie Martin
+#### Modified from code written by Marie Tosa
 ###################
 
 #library(plyr)
@@ -90,9 +89,6 @@ data.all2 <- diet %>% dplyr::group_by(labid.y, speciesid_osu, speciessimpleidgro
                       totalreads = mean(total_reads),
                       pidmatch = mean(best_match_pid.mean)) %>% ungroup
   
-#sk.final <- read.table(file="Data_Raw/spilogale_gracilis_metabarcoding_manual_byphylum_2022-01-25.txt", sep=",", header=T) #NA values in rows for MT904 and F37-193, samples only had clupea
-#sk.final <- sk.final[!sk.final$ScatID %in% c("MT904","F37-193"),] #remove MT904 and F37-193 from sk.final, samples only had clupea
-
 #give data.all new season information
 #data.all <- merge(data.all, sk.final[,c("ScatID","CollectionType","CollectionDate","scatseason","logged","e","e.m","YrsSinceDi")], by.x="sample", by.y="ScatID", all.x=T)
 
@@ -141,8 +137,7 @@ ggsave("prelimresults/YosemiteDiet_AllPhylo_240417.jpg", width=20,height=14, uni
 ##### puma #####
 #vertebrate data
 vertdata2 <- data.all2[data.all2$speciesid_osu == "Puma concolor" & data.all2$phylum == "Chordata",]
-#remove MT906 and MT907 because probably clupea bones via manual sort
-#vertdata <- vertdata[!vertdata$sample %in% c("MT906","MT907"),]
+
 library(plyr)
 #summarize number of verts per scat
 vertcount2 <- ddply(vertdata2, .(labid.y), nrow)
@@ -168,8 +163,7 @@ ggsave("prelimresults/YosemitePUCO_prelimphylo_230208.png", width=11,height=11, 
 ##### coyote #####
 #vertebrate data
 vertdata2 <- data.all2[data.all2$speciesid_osu == "Canis latrans" & data.all2$phylum == "Chordata",]
-#remove MT906 and MT907 because probably clupea bones via manual sort
-#vertdata <- vertdata[!vertdata$sample %in% c("MT906","MT907"),]
+
 library(plyr)
 #summarize number of verts per scat
 vertcount2 <- ddply(vertdata2, .(labid.y), nrow)
@@ -195,8 +189,7 @@ ggsave("prelimresults/YosemiteCALA_prelimphylo_230208.png", width=11,height=11, 
 ##### bobcat #####
 #vertebrate data
 vertdata2 <- data.all2[data.all2$speciesid_osu == "Lynx rufus" & data.all2$phylum == "Chordata",]
-#remove MT906 and MT907 because probably clupea bones via manual sort
-#vertdata <- vertdata[!vertdata$sample %in% c("MT906","MT907"),]
+
 library(plyr)
 #summarize number of verts per scat
 vertcount2 <- ddply(vertdata2, .(labid.y), nrow)
@@ -222,8 +215,7 @@ ggsave("prelimresults/YosemiteLYRU_prelimphylo_230208.png", width=11,height=11, 
 ##### grey fox #####
 #vertebrate data
 vertdata2 <- data.all2[data.all2$speciesid_osu == "Urocyon cinereoargenteus" & data.all2$phylum == "Chordata",]
-#remove MT906 and MT907 because probably clupea bones via manual sort
-#vertdata <- vertdata[!vertdata$sample %in% c("MT906","MT907"),]
+
 library(plyr)
 #summarize number of verts per scat
 vertcount2 <- ddply(vertdata2, .(labid.y), nrow)
@@ -249,8 +241,7 @@ ggsave("prelimresults/YosemiteURCI_prelimphylo_230208.png", width=11,height=11, 
 ##### fisher #####
 #vertebrate data
 vertdata2 <- data.all2[data.all2$speciesid_osu == "Pekania pennanti" & data.all2$phylum == "Chordata",]
-#remove MT906 and MT907 because probably clupea bones via manual sort
-#vertdata <- vertdata[!vertdata$sample %in% c("MT906","MT907"),]
+
 library(plyr)
 #summarize number of verts per scat
 vertcount2 <- ddply(vertdata2, .(labid.y), nrow)
@@ -276,8 +267,7 @@ ggsave("prelimresults/YosemitePEPE_prelimphylo_230208.png", width=11,height=11, 
 ##### red fox #####
 #vertebrate data
 vertdata2 <- data.all2[data.all2$speciesid_osu == "Vulpes vulpes" & data.all2$phylum == "Chordata",]
-#remove MT906 and MT907 because probably clupea bones via manual sort
-#vertdata <- vertdata[!vertdata$sample %in% c("MT906","MT907"),]
+
 library(plyr)
 #summarize number of verts per scat
 vertcount2 <- ddply(vertdata2, .(labid.y), nrow)
