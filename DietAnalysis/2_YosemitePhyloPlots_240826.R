@@ -3,10 +3,10 @@
 # Diet data - species level plots
 #=============================
 
-#### Scats collected by Rogue Detection Teams (2019-2020)
-#### Funded by OSU, YOSE NP, Yosemite Conservancy - Sean Matthews, Sarah Stock, David Green, Ben Sacks, Taal Levi 
-#### Modified by Marie Martin
-#### Modified from code written by Marie Tosa
+#### Scats collected by [redacted for anonymity]
+#### Funded by [redacted for anonymity] 
+#### Modified by [redacted for anonymity]
+#### Modified from code written by [redacted for anonymity]
 ###################
 
 #library(plyr)
