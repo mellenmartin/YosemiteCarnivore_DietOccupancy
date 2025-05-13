@@ -7,37 +7,30 @@ library(rjags)
 library(jagsUI)
 library(R2jags)
 
-setwd("~/OccupancyAnalysis/LongRun_240812")
+setwd("~/OccupancyAnalysis/LongRun_250211")
 
 set.seed(123)
 sink("YosemiteOcc_All_2kmgridsnow.txt")
 cat(" 
+ 
 model {
     # derived parameters
-    #Predicted effects of covariates on occupancy
-    for(s in 1:S){
-    for(i in 1:400){
-    logit(snow.fx[s,i]) <- a0[s] + a1[s]*((snow.p[i]-snow.mean)/snow.sd) 
-    logit(sdcancov.fx[s,i]) <- a0[s] + a3[s]*((sdcancov.p[i]-sdcancov.mean)/sdcancov.sd) 
-    logit(cancov.fx[s,i]) <- a0[s] + a2[s]*((cancov.p[i]-cancov.mean)/cancov.sd) 
-    }
-    }
 
     # Specify priors
     # occupancy
-    mu.occ ~ dunif(-10,10) 
+    mu.occ ~ dnorm(0,2) 
     tau.occ <- 1/(sd.occ^2)
-    sd.occ ~ dunif(0,10)
+    sd.occ ~ dunif(0,2)
 
     #detection
-    mu.p ~ dunif(-10,10)
+    mu.p ~ dnorm(0,2)
     tau.p <-  1/(sd.p^2)
-    sd.p ~ dunif(0,10)
+    sd.p ~ dunif(0,2)
     
     #detection
-    mu.pscat ~ dunif(-10,10)
+    mu.pscat ~ dnorm(0,2)
     tau.pscat <-  1/(sd.pscat^2)
-    sd.pscat ~ dunif(0,10)
+    sd.pscat ~ dunif(0,2)
     
     for (s in 1:S){
     # occupancy
@@ -45,6 +38,9 @@ model {
     a1[s] ~ dnorm(0, 0.01)
     a2[s] ~ dnorm(0, 0.01)
     a3[s] ~ dnorm(0, 0.01)
+    a4[s] ~ dnorm(0, 0.01)
+    a5[s] ~ dnorm(0, 0.01)
+    a6[s] ~ dnorm(0, 0.01)
     
     # detection
     b0[s] ~ dnorm(mu.p, tau.p)
@@ -54,6 +50,20 @@ model {
     b1scat[s] ~ dnorm(0, 0.01)
     b2scat[s] ~ dnorm(0, 0.01)
     } # s
+    
+    ### camera random effect
+    for(t in 1:TT){
+    for(r in 1:RR){
+    epsilon[r,t] ~ dnorm(0, sigma_epsilon)
+    } # r
+    } # t
+    sigma_epsilon ~ dgamma(0.01,0.5) 
+    
+    #### grid cell random effect ###
+    for(g in 1:GG){
+    epsilon_occ[g] ~ dnorm(0, sigma_epsilonocc)
+    } # r
+    sigma_epsilonocc ~ dgamma(0.01,0.5) 
     
     # Derived quantities
     for (s in 1:S) {
@@ -67,9 +77,9 @@ model {
     for (r in 1:RR){                    # For each station
     for (t in 1:TT){                    # For each year
     for (m in 1:MM){                    # For each month
-    ycoy[r,t,m] ~ dbern(muccoy[r,t,m]*deployed[r,t,m])        # presence/absence each year on cam
+    ycoy[r,t,m] ~ dbern(muccoy[r,t,m])        # presence/absence each year on cam
     muccoy[r,t,m] <- z[stgrid[r],1]*pcamcoy[r,t,m]  # true occupancy in the grid cell where camera was placed * probability of detection
-    logit(pcamcoy[r,t,m]) <- b0[1] + b1[1]*cameffort[r,t,m] + b2[1]*elcamdetstd[r] 
+    logit(pcamcoy[r,t,m]) <- b0[1] + b1[1]*cameffort[r,t,m] + b2[1]*elcamdetstd[r] + epsilon[r,t]
     #} #s
     } #m
     } #t
@@ -94,9 +104,9 @@ model {
     for (r in 1:RR){                    # For each station
     for (t in 1:TT){                    # For each year
     for (m in 1:MM){                    # For each month
-    ybob[r,t,m] ~ dbern(mucbob[r,t,m]*deployed[r,t,m])        # presence/absence each year on cam
+    ybob[r,t,m] ~ dbern(mucbob[r,t,m])        # presence/absence each year on cam
     mucbob[r,t,m] <- z[stgrid[r],2]*pcambob[r,t,m]  # true occupancy in the grid cell where camera was placed * probability of detection
-    logit(pcambob[r,t,m]) <- b0[2] + b1[2]*cameffort[r,t,m] + b2[2]*elcamdetstd[r] 
+    logit(pcambob[r,t,m]) <- b0[2] + b1[2]*cameffort[r,t,m] + b2[2]*elcamdetstd[r] + epsilon[r,t]
     #} #s
     } #m
     } #t
@@ -121,9 +131,9 @@ model {
     for (r in 1:RR){                    # For each station
     for (t in 1:TT){                    # For each year
     for (m in 1:MM){                    # For each month
-    ycoug[r,t,m] ~ dbern(muccoug[r,t,m]*deployed[r,t,m])        # presence/absence each year on cam
+    ycoug[r,t,m] ~ dbern(muccoug[r,t,m])        # presence/absence each year on cam
     muccoug[r,t,m] <- z[stgrid[r],3]*pcamcoug[r,t,m]  # true occupancy in the grid cell where camera was placed * probability of detection
-    logit(pcamcoug[r,t,m]) <- b0[3] + b1[3]*cameffort[r,t,m] + b2[3]*elcamdetstd[r] 
+    logit(pcamcoug[r,t,m]) <- b0[3] + b1[3]*cameffort[r,t,m] + b2[3]*elcamdetstd[r] + epsilon[r,t]
     #} #s
     } #m
     } #t
@@ -148,9 +158,9 @@ model {
     for (r in 1:RR){                    # For each station
     for (t in 1:TT){                    # For each year
     for (m in 1:MM){                    # For each month
-    yfox[r,t,m] ~ dbern(mucfox[r,t,m]*deployed[r,t,m])        # presence/absence each year on cam
+    yfox[r,t,m] ~ dbern(mucfox[r,t,m])        # presence/absence each year on cam
     mucfox[r,t,m] <- z[stgrid[r],4]*pcamfox[r,t,m]  # true occupancy in the grid cell where camera was placed * probability of detection
-    logit(pcamfox[r,t,m]) <- b0[4] + b1[4]*cameffort[r,t,m] + b2[4]*elcamdetstd[r] 
+    logit(pcamfox[r,t,m]) <- b0[4] + b1[4]*cameffort[r,t,m] + b2[4]*elcamdetstd[r] + epsilon[r,t]
     #} #s
     } #m
     } #t
@@ -175,23 +185,21 @@ model {
     for (r in 1:RR){                    # For each station
     for (t in 1:TT){                    # For each year
     for (m in 1:MM){                    # For each month
-    ymart[r,t,m] ~ dbern(mucmart[r,t,m]*deployed[r,t,m])        # presence/absence each year on cam
+    ymart[r,t,m] ~ dbern(mucmart[r,t,m])        # presence/absence each year on cam
     mucmart[r,t,m] <- z[stgrid[r],5]*pcammart[r,t,m]  # true occupancy in the grid cell where camera was placed * probability of detection
-    logit(pcammart[r,t,m]) <- b0[5] + b1[5]*cameffort[r,t,m] + b2[5]*elcamdetstd[r] 
+    logit(pcammart[r,t,m]) <- b0[5] + b1[5]*cameffort[r,t,m] + b2[5]*elcamdetstd[r] + epsilon[r,t]
     #} #s
     } #m
     } #t
     } #r
     
     # Observation model for scat locations
-    #for(s in 1:S){
     for(x in 1:XX){   # for each detection grid cell
     for(t in 1:TT){   # for each year
     for(m in 1:MM){   # for each month
     yscatmart[x,t,m] ~ dbern(mu3mart[x,t,m]) 
     mu3mart[x,t,m] <- z[gridpix[x],5]*pscatmart[x,t,m]                        
     logit(pscatmart[x,t,m]) <- b0scat[5] + b1scat[5]*effortseason[x,t,m] + b2scat[5]*eldetstd[x]
-    #} #s
     } #m
     } #t
     } #x
@@ -203,7 +211,7 @@ model {
     logit(psi[s,g]) <- a0[s] + a1[s]*snow[g] + a2[s]*cancov[g] + a3[s]*sdcancov[g] 
     } #g
     } #s
-    
+        
     }
     ",fill = TRUE)
 sink()
@@ -272,9 +280,6 @@ params_YNP <- c("a0",
                 "b2scat",
                 "occ.fs",
                 "psi.fs",
-                "cancov.fx",
-                "sdcancov.fx",
-                "snow.fx",
                 "psi",
                 "z")
 
@@ -289,9 +294,9 @@ YNP_Occ_alllargegridsnow <- jagsUI::jags(data_YNP,
                  "YosemiteOcc_All_2kmgridsnow.txt", 
                  n.chains = 3,
                  n.thin = 5,
-                 n.iter = 75000,
-                 n.adapt = NULL,
-                 n.burnin = 50000,
+                 n.iter = 150000,
+                 n.adapt = 1000,
+                 n.burnin = 100000,
                  parallel = TRUE,
                  #save.all.iter = TRUE,
                  #Rhat.limit = 1.05,
